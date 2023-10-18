@@ -12,20 +12,15 @@
 
 #include "Command.hpp"
 
-void	Command::who() {
-	if (this->_commandArray[1][0] == '#' && channelExists(this->_commandArray[1]))
-		whoChannel();
-}
-
-void Command::whoChannel() {
+void Command::who() {
+	if (this->_commandArray[1][0] != '#' || !channelExists(this->_commandArray[1]))
+		return;
 	Channel channel = this->_ircServ.getChannel(this->_commandArray[1]);
 
 	std::map<std::string, Client>	channelUsers = channel.getUsers();
 	std::map<std::string, Client>::iterator	it = channelUsers.begin();
 
 	for (; it != channelUsers.end(); it++) {
-		std::string	reply = ":IRC 353 " + it->second.getNickname() + " = " + this->_commandArray[1] + " :" \
-			+ channel.userListString();
-		ft_send(it->second.getSocket(), reply);
+		ft_send(it->second.getSocket(), RPL_WHOREPLY(it->second.getNickname(), _commandArray[1], channel.userListString()));
 	}
 }

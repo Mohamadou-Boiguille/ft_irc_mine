@@ -12,8 +12,6 @@
 
 #pragma once
 
-#include <sstream>
-#include <cctype>
 #include "../server/Server.hpp"
 
 #define ADD true
@@ -33,7 +31,7 @@ std::vector<std::string>	ircCommandSplitter(std::string command);
 
 std::string					intToString(int number);
 
-int							ft_send(Client user, std::string reply);
+void						ft_send(Client user, std::string reply);
 
 bool						checkPortNumber(char *portNumber);
 bool						invalidInput(int argc, char **argv);

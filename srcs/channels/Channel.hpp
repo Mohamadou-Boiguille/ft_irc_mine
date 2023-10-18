@@ -32,6 +32,7 @@ public:
 	void removeOperator(Client &user);
 
 	void	sendMessageToChannel(Client sender, std::string message);
+	bool	isUserInChannel(const std::string &nickname);
 // Mode related funcs
 	bool	checkChannelPassword(const std::string &password);
 	void setChannelPassword(const std::string &password, const std::string &name, bool addOrRemove);

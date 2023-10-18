@@ -56,6 +56,10 @@ bool Channel::isOperator(const std::string &nickname) {
 		return false;
 }
 
+bool Channel::isUserInChannel(const std::string &nickname)
+{
+    return _users.find(nickname) != _users.end();
+}
 std::string Channel::getName() const {
 	return this->_name;
 }
@@ -94,15 +98,12 @@ bool Channel::isInvited(const std::string &clientName)
 
 void Channel::deleteClient(const std::string &clientName, std::string &reply)
 {
-    std::map<std::string, Client>::iterator clientIt = _users.find(clientName);
+    const std::map<std::string, Client>::iterator &clientIt = _users.find(clientName);
     if (clientIt != _users.end())
 	{
 		std::map<std::string, Client>::iterator it = _users.begin();
 		for (; it != _users.end(); ++it)
-		{
-			if (send(it->second.getSocket(), reply.c_str(), reply.length(), 0) < 0)
-				std::cout << "Failed to send message" << std::endl;
-		}
+			ft_send(it->second, reply);
         _users.erase(clientIt);
 	}
 }

@@ -47,6 +47,8 @@ void	Server::commandMapping() {
 	_commandMap["MODE"] = &Command::mode;
 	_commandMap["PART"] = &Command::part;
 	_commandMap["INVITE"] = &Command::invite;
+	_commandMap["KICK"] = &Command::kick;
+	_commandMap["QUIT"] = &Command::quit;
 }
 
 void Server::epollSetup() {

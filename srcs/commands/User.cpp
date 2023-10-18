@@ -33,12 +33,10 @@ void Command::nick() {
 	std::string oldNickname = this->_client.getNickname();
 
 	if (oldNickname.empty())
-		// this->_client.setNickname(newNickname);
 		oldNickname = '*';
 	if (nicknameAvailable(newNickname) && nicknameIsValid(newNickname)) {
 		this->_client.setNickname(newNickname);
 		this->_client.setRegistered(NICK_REGISTRATION);
-		// ft_send(this->_client, ":" + oldNickname + " NICK :" + newNickname);
 	}
 }
 
@@ -48,7 +46,7 @@ bool Command::nicknameAvailable(std::string nickname) {
 
 	for (; it != clientList.end(); ++it) {
 		if (it->second.getNickname() == nickname && it->first != this->_client.getSocket()) {
-			ft_send(this->_client, ERR_NICKNAMEINUSE(this->_client));
+			ft_send(this->_client, ERR_NICKNAMEINUSE(nickname));
 			return false;
 		}
 	}
@@ -56,6 +54,8 @@ bool Command::nicknameAvailable(std::string nickname) {
 }
 
 bool Command::nicknameIsValid(std::string nickname) {
+	if (nickname.length() < 3)
+		return false;
 	std::string nonAlnumValidChars = "-_^[]{}\\`|";
 	if (nickname.at(0) == '-')
 		return false;

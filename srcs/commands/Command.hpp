@@ -22,6 +22,7 @@ public:
 	Command(const std::vector<std::string> &commandArray, Client &client, Server &ircServ);
 	~Command();
 
+	void	kick();
 	void	user();
 	void	nick();
 	void	join();
@@ -33,6 +34,7 @@ public:
 	void	mode();
 	void	part();
 	void	invite();
+	void	quit();
 
 	bool	registerRequest();
 

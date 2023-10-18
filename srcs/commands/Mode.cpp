@@ -49,7 +49,7 @@ void Command::setITKL_Modes(char letterMode, size_t &argIndex)
 	else if (letterMode == 'k')
 	{
 		if (addOrRemoveMode == ADD && _commandArray.size() < 4)
-			return (void)ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE"));
+			return ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE"));
 		std::string password = _commandArray[3];
 		channel.setChannelPassword(password, _client.getNickname(), addOrRemoveMode);
 	}
@@ -64,7 +64,7 @@ void Command::setO_Modes(size_t &argIndex)
 	std::string modes = _commandArray[2]; 
 	std::map<std::string, Client> &users = channel.getUsers();
 	if (argIndex >= _commandArray.size())
-		return (void)ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE"));
+		return ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE"));
 	std::string argument = _commandArray[argIndex];
 
 	addOrRemoveMode = (modes.at(0) == '+') ? ADD : REMOVE;
@@ -81,7 +81,7 @@ void Command::setO_Modes(size_t &argIndex)
 		argIndex++;
 	}
 	else
-		return (void)ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE no user"));
+		return ft_send(this->_client, ERR_NEEDMOREPARAMS(this->_client, "MODE no user"));
 }
 
 void	Command::mode()
@@ -92,15 +92,15 @@ void	Command::mode()
 	std::string channelName = _commandArray[1];
 	std::string modes = _commandArray[2]; 
 	if (channelName.empty() || channelName.at(0) != '#')
-		return (void)ft_send(this->_client, ERR_NOSUCHCHANNEL(this->_client, channelName));
+		return ft_send(this->_client, ERR_NOSUCHCHANNEL(this->_client, channelName));
 	channelName = channelName.substr(1);
 	if (!channelExists(channelName))
-		return (void)ft_send(this->_client, ERR_NOSUCHCHANNEL(this->_client, channelName));
+		return ft_send(this->_client, ERR_NOSUCHCHANNEL(this->_client, channelName));
 	Channel &channel = _ircServ.getChannel(channelName);
 	if (!channel.isOperator(_client.getNickname()))
-		return (void)ft_send(this->_client, ERR_CHANOPRIVSNEEDED(channelName));
+		return ft_send(this->_client, ERR_CHANOPRIVSNEEDED(channelName));
 	if (channel.getUsers().find(_client.getNickname()) == channel.getUsers().end())
-		return (void)ft_send(this->_client, ERR_NOTONCHANNEL(channelName));
+		return ft_send(this->_client, ERR_NOTONCHANNEL(channelName));
 	size_t argIndex = 3;
 	for (size_t i = 1; i < modes.length(); i++)
 	{

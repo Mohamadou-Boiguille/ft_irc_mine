@@ -31,7 +31,7 @@ std::string Server::getServerPassword() {
 	return _password;
 }
 
-std::map<std::string, Channel> Server::getChannelList() const {
+std::map<std::string, Channel> &Server::getChannelList() {
 	return this->_channels;
 }
 
@@ -43,7 +43,7 @@ Channel& Server::getChannel(std::string channelName) {
 	return it->second;
 }
 
-const std::map<int, Client>	&Server::getClientList() const {
+std::map<int, Client>	&Server::getClientList() {
 	return this->_clients;
 }
 

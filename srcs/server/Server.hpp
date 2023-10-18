@@ -25,6 +25,9 @@
 #include <vector>
 #include <sys/epoll.h>
 #include <cerrno>
+#include <sstream>
+#include <cctype>
+#include <iostream>
 #include "../client/Client.hpp"
 #include "../channels/Channel.hpp"
 #include "../commands/Command.hpp"
@@ -47,9 +50,9 @@ public:
 	void	serverShutdown();
 	bool	serverRunning();
 
-	std::map<std::string, Channel>	getChannelList() const;
-	Channel&						getChannel(std::string channelName);
-	const std::map<int, Client>		&getClientList() const;
+	std::map<std::string, Channel>	&getChannelList();
+	Channel							&getChannel(std::string channelName);
+	std::map<int, Client>			&getClientList();
 	std::string						getServerPassword();
 	int								getServerSocket();
 	int								getEpollFd();

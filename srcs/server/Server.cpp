@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <cstring>
+#include <iostream>
+#include <map>
+#include <string>
 
 void Server::listenToNewEvents() {
 	struct epoll_event events[10];
@@ -20,23 +24,28 @@ void Server::listenToNewEvents() {
 		if (events[i].data.fd == this->_serverSocket)
 			acceptConnection();
 		else {
-			Client &client = this->_clients.find(events[i].data.fd)->second;
-			manageClientEvents(client);
+			std::map<int, Client>::iterator clientIt = _clients.find(events[i].data.fd);
+			if (clientIt != _clients.end())
+				manageClientEvents(clientIt->second);
 		}
 	}
 }
 
 void Server::manageClientEvents(Client &client) {
 	char buffer[1024];
+	memset(buffer, 0, sizeof(buffer));
 	ssize_t bytesRead = recv(client.getSocket(), buffer, sizeof(buffer) - 1, 0);
-	if (bytesRead <= 0) {
-		std::cout << "CRASH" << std::endl;
+	if (bytesRead == 0 || (bytesRead == -1 && errno == ECONNRESET)) {
 		close(client.getSocket());
-		epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, client.getSocket(), NULL);
-		this->_clients.erase(client.getSocket());
+		if (epoll_ctl(this->_epollFd, EPOLL_CTL_DEL, client.getSocket(), NULL))
+			std::cout << "failed to remove epoll" << std::endl;
+		std::string reply = "crash";
+		getClientList().erase(client.getSocket());
+		std::map<std::string, Channel>::iterator it = _channels.begin();
+		while (it != _channels.end())
+			it->second.deleteClient(client.getNickname(), reply);
 	}
 	else {
-		buffer[bytesRead] = '\0';  // Null-terminate the string
 		std::string bufferString(buffer);
 		std::cout << "<- " << bufferString << std::endl;
 		commandHandler(bufferString, client);
